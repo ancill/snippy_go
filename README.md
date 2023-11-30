@@ -8,4 +8,4 @@ If you want to disable directory listings there are a few different approaches y
 
 The simplest way? Add a blank index.html file to the specific directory that you want to disable listings for. This will then be served instead of the directory listing, and the user will get a 200 OK response with no body. If you want to do this for all directories under ./ui/static you can use the command:
 
-`find ./ui/static -type d -exec touch {}/index.html \`
+`find ./ui/static -type d -exec touch {}/index.html \;`
