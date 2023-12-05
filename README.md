@@ -10,7 +10,14 @@ The simplest way? Add a blank index.html file to the specific directory that you
 
 `find ./ui/static -type d -exec touch {}/index.html \;`
 
-### Database
+## Database
+
+### Install to local machine
+
+`brew install mysql` |
+`sudo apt install mysql-server`
+
+### Starting script for this app
 
 ```sql
 -- Create a new UTF-8 `snippetbox` database.
@@ -58,3 +65,27 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON snippetbox.* TO 'web'@'localhost';
 -- Important: Make sure to swap 'pass' with a password of your own choosing.
 ALTER USER 'web'@'localhost' IDENTIFIED BY 'pass';
 ```
+
+## Packages
+
+### Upgrading packages
+
+Once a package has been downloaded and added to your go.mod file the package and version are ‘fixed’. But there are many reasons why you might want to upgrade to use a newer version of a package in the future.
+
+To upgrade to latest available minor or patch release of a package, you can simply run go get with the -u flag like so:
+
+$ go get -u github.com/foo/bar
+Or alternatively, if you want to upgrade to a specific version then you should run the same command but with the appropriate @version suffix. For example:
+
+$ go get -u github.com/foo/bar@v2.0.0
+
+### Removing unused packages
+
+Sometimes you might go get a package only to realize later that you don’t need it anymore. When this happens you’ve got two choices.
+
+You could either run go get and postfix the package path with @none, like so:
+
+$ go get github.com/foo/bar@none
+Or if you’ve removed all references to the package in your code, you could run go mod tidy, which will automatically remove any unused packages from your go.mod and go.sum files.
+
+$ go mod tidy -v
