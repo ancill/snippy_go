@@ -70,6 +70,18 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON snippetbox.* TO 'web'@'localhost';
 ALTER USER 'web'@'localhost' IDENTIFIED BY 'pass';
 ```
 
+### Usefull commads for testing app
+
+```bash
+# conect to database
+mysql -D snippetbox -u web -p
+
+# select snipptes
+SELECT id, title, expires FROM snippets;
+
+
+```
+
 ## Packages
 
 ### Upgrading packages
