@@ -1,5 +1,9 @@
 # HO
 
+If you don’t like the term model, you might want to think of it as a service layer or data access layer instead.
+
+Remember: The internal directory is being used to hold ancillary non-application-specific code,
+
 ## Disabling directory listings
 
 Warning: http.ServeFile() does not automatically sanitize the file path. If you’re constructing a file path from untrusted user input, to avoid directory traversal attacks you must sanitize the input with filepath.Clean() before using it.
