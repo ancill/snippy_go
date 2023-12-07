@@ -8,7 +8,7 @@ import (
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
-	models "snipper.ancill.com/internal/modals"
+	models "snipper.ancill.com/internal/models"
 )
 
 // app-wide deps struct
