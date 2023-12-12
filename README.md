@@ -82,6 +82,26 @@ SELECT id, title, expires FROM snippets;
 
 ```
 
+## Verbosity
+
+If you’re coming from Ruby, Python or PHP, the code for querying SQL databases may feel a bit verbose, especially if you’re used to dealing with an abstraction layer or ORM.
+
+But the upside of the verbosity is that our code is non-magical; we can understand and control exactly what is going on. And with a bit of time, you’ll find that the patterns for making SQL queries become familiar and you can copy-and-paste from previous work.
+
+If the verbosity really is starting to grate on you, you might want to consider trying the jmoiron/sqlx package. It’s well designed and provides some good extensions that make working with SQL queries quicker and easier. Another, newer, option you may want to consider is the blockloop/scan package.
+
+## Managing null values
+
+One thing that Go doesn’t do very well is managing NULL values in database records.
+
+Let’s pretend that the title column in our snippets table contains a NULL value in a particular row. If we queried that row, then rows.Scan() would return an error because it can’t convert NULL into a string:
+
+sql: Scan error on column index 1: unsupported Scan, storing driver.Value type
+&lt;nil&gt; into type \*string
+Very roughly, the fix for this is to change the field that you’re are scanning into from a string to a sql.NullString type. See this gist for a working example.
+
+But, as a rule, the easiest thing to do is simply avoid NULL values altogether. Set NOT NULL constraints on all your database columns, like we have done in this book, along with sensible DEFAULT values as necessary.
+
 ## Packages
 
 ### Upgrading packages
