@@ -1,4 +1,6 @@
-# HO
+### COMANDS
+
+`ss -tnlp` - show open ports
 
 If you don’t like the term model, you might want to think of it as a service layer or data access layer instead.
 
