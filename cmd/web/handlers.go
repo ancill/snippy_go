@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	"text/template"
 
 	models "snipper.ancill.com/internal/models"
 )
@@ -22,31 +21,9 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// init slice contain path to files
-	files := []string{
-		"./ui/html/base.html",
-		"./ui/html/partials/nav.html",
-		"./ui/html/pages/home.html",
-	}
-
-	// handle template
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-
-	data := &templateData{
+	app.render(w, http.StatusOK, "home.html", &templateData{
 		Snippets: snippets,
-	}
-
-	// return response body
-	err = ts.ExecuteTemplate(w, "base", data)
-	if err != nil {
-		app.serverError(w, err)
-	}
-
-	w.Write([]byte("Hello from Snippetbox"))
+	})
 }
 
 func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
@@ -65,29 +42,10 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	// Initialize a slice containing the paths to the view.tmpl file,
-	// plus the base layout and navigation partial that we made earlier.
-	files := []string{
-		"./ui/html/base.html",
-		"./ui/html/partials/nav.html",
-		"./ui/html/pages/view.html",
-	}
 
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-
-	// Create an instance of a templateData struct holding the snippet data.
-	data := &templateData{
+	app.render(w, http.StatusOK, "view.html", &templateData{
 		Snippet: snippet,
-	}
-
-	err = ts.ExecuteTemplate(w, "base", data)
-	if err != nil {
-		app.serverError(w, err)
-	}
+	})
 }
 
 func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
