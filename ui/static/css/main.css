@@ -3,7 +3,7 @@
   margin: 0;
   padding: 0;
   font-size: 18px;
-  font-family: "Ubuntu Mono", monospace;
+  font-family: system-ui, monospace;
 }
 
 html,
@@ -68,7 +68,7 @@ a:hover {
 textarea,
 input:not([type="submit"]) {
   font-size: 18px;
-  font-family: "Ubuntu Mono", monospace;
+  font-family: system-ui, monospace;
 }
 
 header {
