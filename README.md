@@ -106,6 +106,8 @@ mysql -D snippetbox -u web -p
 # select snipptes
 SELECT id, title, expires FROM snippets;
 
+# generate tls cert
+go run /usr/local/go/src/crypto/tls/generate_cert.go --rsa-bits=2048 --host=localhost
 
 ```
 
