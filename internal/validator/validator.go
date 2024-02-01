@@ -7,12 +7,18 @@ import (
 )
 
 type Validator struct {
-	FieldErrors map[string]string
+	NonFieldErrors []string
+	FieldErrors    map[string]string
 }
 
 // Valid() returns true if the FieldErrors map doesn't contain any entries.
 func (v *Validator) Valid() bool {
-	return len(v.FieldErrors) == 0
+	return len(v.FieldErrors) == 0 && len(v.NonFieldErrors) == 0
+}
+
+// AddNonFieldError() helper for adding error messages
+func (v *Validator) AddNonFieldError(message string) {
+	v.NonFieldErrors = append(v.NonFieldErrors, message)
 }
 
 // AddFieldError() adds an error message to the FieldErrors map (so long as no
