@@ -295,3 +295,37 @@ Under heavy load, it’s possible that a large amount of prepared statements wil
 The code too is more complicated than not using prepared statements.
 
 So, there is a trade-off to be made between performance and complexity. As with anything, you should measure the actual performance benefit of implementing your own prepared statements to determine if it’s worth doing. For most cases, I would suggest that using the regular Query(), QueryRow() and Exec() methods — without preparing statements yourself — is a reasonable starting point.
+
+### SameSite ‘Strict’ setting
+
+If you want, you can change the session cookie to use the SameSite=Strict setting instead of (the default) SameSite=Lax. Like this:
+
+```go
+sessionManager := scs.New()
+sessionManager.Cookie.SameSite = http.SameSiteStrictMode
+```
+
+But it’s important to be aware that using SameSite=Strict will block the session cookie being sent by the user’s browser for all cross-site usage — including safe requests with HTTP methods like GET and HEAD.
+
+While that might sound even safer (and it is!) the downside is that the session cookie won’t be sent when a user clicks on a link to your application from another website. In turn, that means that your application would initially treat the user as ‘not logged in’ even if they have an active session containing their "authenticatedUserID" value.
+
+So if your application will potentially have other websites linking to it (or even links shared in emails or private messaging services), then SameSite=Lax is generally the more appropriate setting.
+
+SameSite cookies and TLS 1.3
+Earlier in this chapter I said that we can’t solely rely on the SameSite cookie attribute to prevent CSRF attacks, because it isn’t fully supported by all browsers.
+
+But there is an exception to this rule, due to the fact that there is no browser that exists which supports TLS 1.3 and does not support SameSite cookies.
+
+In other words, if you were to make TLS 1.3 the minimum supported version in the TLS config for your server, then all browsers able to use your application will support SameSite cookies.
+
+```go
+tlsConfig := &tls.Config{
+MinVersion: tls.VersionTLS13,
+}
+
+```
+
+So long as you only allow HTTPS requests to your application and enforce TLS 1.3 as the minimum TLS version, you don’t need to make any additional mitigation against CSRF attacks (like using the justinas/nosurf package). Just make sure that you always:
+
+Set SameSite=Lax or SameSite=Strict on the session cookie; and
+Use an ‘unsafe’ HTTP method (i.e. POST, PUT or DELETE) for any state-changing requests.
