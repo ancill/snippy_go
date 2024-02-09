@@ -329,3 +329,20 @@ So long as you only allow HTTPS requests to your application and enforce TLS 1.3
 
 Set SameSite=Lax or SameSite=Strict on the session cookie; and
 Use an ‘unsafe’ HTTP method (i.e. POST, PUT or DELETE) for any state-changing requests.
+
+## The request context syntax
+
+The basic code for adding information to a request’s context looks like this:
+
+```go
+// Where r is a \*http.Request...
+ctx := r.Context()
+ctx = context.WithValue(ctx, "isAuthenticated", true)
+r = r.WithContext(ctx)
+```
+
+Let’s step through this line-by-line.
+
+First, we use the r.Context() method to retrieve the existing context from a request and assign it to the ctx variable.
+Then we use the context.WithValue() method to create a new copy of the existing context, containing the key "isAuthenticated" and a value of true.
+Then finally we use the r.WithContext() method to create a copy of the request containing our new context.
