@@ -346,3 +346,18 @@ Let’s step through this line-by-line.
 First, we use the r.Context() method to retrieve the existing context from a request and assign it to the ctx variable.
 Then we use the context.WithValue() method to create a new copy of the existing context, containing the key "isAuthenticated" and a value of true.
 Then finally we use the r.WithContext() method to create a copy of the request containing our new context.
+
+## Profiling test coverage
+
+```bash
+go test -cover ./...
+
+// cover file
+go test -coverprofile=/tmp/profile.out ./...
+go tool cover -func=/tmp/profile.out
+go tool cover -html=/tmp/profile.out
+
+
+```
+
+Note: If you’re running some of your tests in parallel, you should use the -covermode=atomic flag (instead of -covermode=count) to ensure an accurate count.
