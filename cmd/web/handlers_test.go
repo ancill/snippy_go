@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"net/url"
+	"strings"
 	"testing"
 
 	"snipper.ancill.com/internal/assert"
@@ -18,6 +19,63 @@ func TestPing(t *testing.T) {
 
 	assert.Equal(t, code, http.StatusOK)
 	assert.Equal(t, body, "OK")
+}
+
+func TestSnippetCreate(t *testing.T) {
+	app := newTestApplication(t)
+	ts := newTestServer(t, app.routes())
+	defer ts.Close()
+
+	tests := []struct {
+		name         string
+		urlPath      string
+		wantCode     int
+		wantHeader   string
+		redirectPath string
+	}{
+		{
+			name:         "Unauthenticated",
+			urlPath:      "/snippet/create",
+			wantCode:     http.StatusSeeOther,
+			wantHeader:   "Location",
+			redirectPath: "/user/login",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			code, headers, _ := ts.get(t, tt.urlPath)
+			assert.Equal(t, code, tt.wantCode)
+
+			if tt.wantHeader != "" {
+				assert.Equal(t, headers.Get(tt.wantHeader), tt.redirectPath)
+			}
+		})
+	}
+
+	t.Run("Authenticated", func(t *testing.T) {
+		_, _, body := ts.get(t, "/user/login")
+		csrfToken := extractCSRFToken(t, body)
+
+		form := url.Values{}
+		form.Add("email", "alice@example.com")
+		form.Add("password", "pa$$word")
+		form.Add("csrf_token", csrfToken)
+		ts.postForm(t, "/user/login", form)
+
+		code, _, body := ts.get(t, "/snippet/create")
+		assert.Equal(t, code, http.StatusOK)
+
+		expected := "<form action='/snippet/create' method='POST'>"
+
+		// Normalize quotes in the expected string
+		expected = strings.ReplaceAll(expected, "'", "\"") // linux case ??
+
+		// Use StringContains for a flexible assertion
+		if !strings.Contains(body, expected) {
+			t.Errorf("expected string '%s' not found in actual response body", expected)
+		}
+	})
+
 }
 
 func TestSnippetView(t *testing.T) {
