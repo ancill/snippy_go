@@ -74,3 +74,7 @@ func Matches(value string, rx *regexp.Regexp) bool {
 
 // Regex to checking the format of an email address
 var EmailRX = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
+
+func CheckEqual(value string, to string) bool {
+	return value == to
+}
